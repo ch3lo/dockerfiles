@@ -16,6 +16,9 @@ RUN apt-get update -y \
     && rm -rf /tmp/*
 
 
+RUN sed -i 's/encoding = \"ascii\"/encoding = \"utf-8\"/g' /usr/lib/python2.7/site.py
+
+
 RUN curl -o /usr/local/bin/gosu -SL --insecure "https://github.com/tianon/gosu/releases/download/1.7/gosu-$(dpkg --print-architecture)" \
     && echo "34049cfc713e8b74b90d6de49690fa601dc040021980812b2f1f691534be8a50  /usr/local/bin/gosu" | sha256sum -c - \
     && chmod +x /usr/local/bin/gosu
@@ -27,4 +30,6 @@ RUN adduser --disabled-password --gecos "" pol \
 ENV HOME /home/pol
 ENV USER pol
 
-CMD ["/usr/local/bin/gosu", "pol", "playonlinux" ]
+ADD entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh" ]
